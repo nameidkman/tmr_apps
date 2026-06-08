@@ -1,20 +1,34 @@
-import socket
+# so basically all that the reciver has to do is recive the array 
+# meaning that i will just freaking give it the entire decode string 
 
-RECIVER_IP = "127.0.0.1"
+import socket   
+import struct
+import random
+from encoder import decode_rle_16bit
+
+RECIVER_IP = ""
 PORT = 5555
-BUFFER_SIZE = 32
+BUFFER_SIZE = 65535 
+
+
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind((RECIVER_IP, PORT))
 
 smthing = 0
 a = "sss"
 
-while a: 
+while a:
     data, client = sock.recvfrom(BUFFER_SIZE)
-    print(f"REcived {data.decode()} from {client}")
-    smthing += 1
+    
+    print(f"\nReceived {len(data)} compressed bytes from {client}")# 1. Receive the raw compressed binary packet
+
+    smthing+=1
     print(smthing)
+    decoded_list = decode_rle_16bit(data)
+
+    print(f"First 5 items: {decoded_list[:100]}")
     if(smthing < 10): 
        continue
     else:
