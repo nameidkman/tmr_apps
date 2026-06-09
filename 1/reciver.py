@@ -5,10 +5,11 @@ import socket
 import struct
 import random
 from encoder import decode_rle_16bit
+from checksum import verify_checksum
 
 RECIVER_IP = ""
 PORT = 5555
-BUFFER_SIZE = 65535 
+BUFFER_SIZE = 60465
 
 
 
@@ -23,13 +24,14 @@ while a:
     data, client = sock.recvfrom(BUFFER_SIZE)
     
     print(f"\nReceived {len(data)} compressed bytes from {client}")# 1. Receive the raw compressed binary packet
+    if verify_checksum(data):
+        data = data[:-2]
+        smthing+=1
+        print(smthing)
+        decoded_list = decode_rle_16bit(data)
 
-    smthing+=1
-    print(smthing)
-    decoded_list = decode_rle_16bit(data)
-
-    print(f"First 5 items: {decoded_list[:100]}")
-    if(smthing < 10): 
-       continue
-    else:
-        a = 0
+        print(f"First 5 items: {decoded_list[:100]}")
+        if(smthing < 10): 
+            continue
+        else:
+            a = 0

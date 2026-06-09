@@ -1,0 +1,47 @@
+subnet broadcasting address for its broadcasting needs. 
+
+255.255.255.255.255 is before knowing its own address duing DHCP>>>
+
+
+DHCP -> dynamic host configuration protocol is used on the IP netowks for automatically assigning the IP addresses and other communication parameter to device connected to the network using a server and client architecture. 
+basically what the computer does is that it takes client instances of the protocol stack(probably the thing which assign the ip or smthing similar to that) on each computer or device. when tis the client request the parameter for the server. 
+
+During the dhcp client software send a dhcp broadcast query requesting the necessary information. This the same thing which i would like to do. The main other are
+Unicast -> basically delivers a message to a single specifc node using a one to one association 
+Broadcasting -> basically send a single message to all of the computer at the same time  
+Multicast -> basically doing multithreading sending a packet to a bunch of different client at the same time 
+Anycast -> what this does is that it will send the packet to only a specific group but it goes from the closest one to the largest one
+
+
+the main operation of how it works 
+
+DHCP tends to be a employs a connectionless service model using UDP. 
+DHCP operation fall into four phase: 
+server discovery -> 
+IP lease offer -> 
+IP lease request -> 
+IP lease acknowledgement ->  
+
+the main thing which i have realized is that is can do anything like a local broadcasting call or even smthing like a directed broadcasting call i dont think there would be a difference and as well as that when i am using the 255.255.255.255 the only thing which i am doing is that i am sending hte values too all of the computers connected on the network which is technically all that i would like to do so ima just be like ye that works out also i am lazy as fuck and i would like to not working on taht anymore i htink this should be enough to be able to get it work probably 
+
+
+
+
+https://www.rfc-editor.org/rfc/rfc1541.txt
+
+DHCP consists of two components: 
+protocol for delivering host specific configuration parameters from a DCP server
+mechanism for allocation of network address to the host
+
+
+Client -> someone that request the initialization parameter for a DHCP server
+
+
+three mechanism supported by IP address allocation
+automatic allocation -> where the DHCP assigns a permanent IP address to a host 
+Dynamic allocation -> where the host tends to a temporary ip for only a certain period of time(or until the host explicitly relinquishes the address)
+manual allocation -> where the ip is assigned by the networking administrator, what hte DHCP is used to simply convey assigned address to the host 
+
+
+
+
