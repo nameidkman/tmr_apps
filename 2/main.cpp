@@ -8,6 +8,45 @@
 #define REG_PIXELS 0x01
 
 
+void sendImage(uint64_t image); 
+bool checkPixel(uint64_t image); 
+void setDispalyBrightness(uint8_t brightness); 
+uint8_t readDisplayBrightness(); 
+
+
+
+void setup(){
+
+
+  // this sets up the overall i2c things 
+  // sda -> 18 
+  // scl -> 19 
+  // the overall thing are setup inside of the function which then leads 
+  // to twi_init which then leads to a 
+  // simple digital write whihc just puts both of them into high
+  Wire.begin(); 
+  Wire.setClock(400000); // 400hz fast mode
+  
+  // define image and brightness
+  uint64_t image; 
+  uint8_t brightness; 
+
+  sendImage(image); 
+  checkPixel(image); 
+  setDispalyBrightness(brightness); 
+  readDisplayBrightness(); 
+
+
+}
+
+
+
+void loop(){
+}
+
+
+
+
 // Write display brightness
 // on the address REG_BRIGHTNESS
 void setDispalyBrightness(uint8_t brightness){
@@ -28,7 +67,6 @@ uint8_t readDisplayBrightness(){
 
   return 0xFF;                        // error
 }
-
 
 
 
