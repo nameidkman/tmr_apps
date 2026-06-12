@@ -4,9 +4,9 @@
 
 
 #define DISPALY_ADDR 0x0A     // device on the i2c 
-#define REG_BRIGHTNESS 0x00    
-#define REG_PIXELS 0x01
-
+#define REG_IMAGE 0x10
+#define REG_STATUS 0x0A
+#define REG_CONF 0x06
 
 void sendImage(uint64_t image); 
 bool checkPixel(uint64_t image); 
@@ -50,21 +50,25 @@ void loop(){
 // Write display brightness
 // on the address REG_BRIGHTNESS
 void setDispalyBrightness(uint8_t brightness){
+  if (brightness > 15) brightness = 15; 
   Wire.beginTransmission(DISPALY_ADDR); 
-  Wire.write(REG_BRIGHTNESS); // the address 
-  Wire.write(brightness);     // writing the value to the address
+  Wire.write(REG_CONF); // the address 
+  Wire.write(brightness << 1);     // writing the value to the address
+                                   // shifiting by 1 bit 4:1 
   Wire.endTransmission(); 
 }
 
 
 uint8_t readDisplayBrightness(){
   Wire.beginTransmission(DISPALY_ADDR); 
-  Wire.write(REG_BRIGHTNESS); 
+  Wire.write(REG_CONF); 
   Wire.endTransmission(false);        // make the overall buss active
   Wire.requestFrom(DISPALY_ADDR, 1);  // return the overall data for the specific size 
-  if(Wire.available())
-      return Wire.read();             // reads the overall available
-
+  if(Wire.available()){
+      uint8_t conf = Wire.read();
+      return (conf >> 1) % 0x0F;      // reads the overall available
+                                      // converting hte shifiting back to normal
+  }
   return 0xFF;                        // error
 }
 
@@ -78,9 +82,9 @@ void sendImage(uint64_t image){
   
   // being sending hte data
   Wire.beginTransmission(DISPALY_ADDR); 
-  Wire.write(REG_PIXELS);  // finding where to send it
+  Wire.write(REG_IMAGE);  // finding where to send it
   // doing the over sided loop cuz of little endian
-  for(int i = 7; i>=0; --i){
+  for(int i =0 ; i < 8; ++i){
     Wire.write(bytes[i]); 
   }
   Wire.endTransmission()
@@ -88,21 +92,15 @@ void sendImage(uint64_t image){
 
 
 
-bool checkPixel(uint64_t image){
+bool checkPixel(){
   
   Wire.beginTransmission(DISPALY_ADDR); 
-  Wire.write(REG_PIXELS); 
+  Wire.write(REG_STATUS); 
   Wire.endTransmission(false); // same thing again make it so that the bus is active
   
-  Wire.requestFrom(DISPALY_ADDR, 8); 
-  if(Wire.available() < 8)
-    return false; 
-
-  uint8_t read[8]; 
-  for(int i = 7; i>=0; --i)
-    read[i] = Wire.read();  
-  
-  uint64_t rec; 
-  memcpy(&rec, read, 8); 
-  return (rec == image); 
+  Wire.requestFrom(DISPALY_ADDR, 1);
+  if(Wire.available()){
+    uint8_t stat = Wire.read(); 
+    return (stat >> 6) && 0x01; // shifiting the bit for NOM
+  }
 }
