@@ -18,9 +18,9 @@ you feed a list of data into the encode and then it will feed a list of 16 bit i
 
 ``` python code (encoder) 
 
-encode\_rle\_16bit(data: list\[int]) -> bytes
+encode_rle_16bit(data: list[int]) -> bytes
 
-decode\_rle\_16bit(byte\_stream: bytes) -> list\[int]
+decode_rle_16bit(byte_stream: bytes) -> list[int]
 
 ```
 
